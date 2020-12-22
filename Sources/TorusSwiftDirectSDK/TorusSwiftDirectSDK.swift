@@ -117,6 +117,31 @@ open class TorusSwiftDirectSDK{
         return tempPromise
     }
     
+    // SignleLogin
+    /// - Parameters:
+    ///   - verifierId:  google email、wechat unionId
+    ///   - idToken: JWT Token
+    /// - Returns: Key Data (privateKey)
+    public func handleSingleLogin(verifierId: String, idToken: String) -> Promise<[String:Any]>{
+        let (tempPromise, seal) = Promise<[String:Any]>.pending()
+        let data: [String:Any] = [:]
+        let extraParams: [String : Any] = ["verifier_id":verifierId]
+        let buffer: Data = try! NSKeyedArchiver.archivedData(withRootObject: extraParams, requiringSecureCoding: false)
+
+        self.getEndpoints().then { boolean in
+            return self.torusUtils.retrieveShares(endpoints: self.endpoints, verifierIdentifier: self.aggregateVerifierName, verifierId: verifierId, idToken: idToken, extraParams: buffer).map{ ($0, data)}
+        }.done { responseFromRetrieveShares, newData in
+            var data = newData
+            data["privateKey"] = responseFromRetrieveShares["privateKey"]
+            data["publicAddress"] = responseFromRetrieveShares["publicAddress"]
+            seal.fulfill(data)
+        }.catch{err in
+            self.logger.error("handleSingleLogin: err:", err)
+            seal.reject(err)
+        }
+        return tempPromise
+    }
+    
     public func handleSingleIdVerifier(controller: UIViewController?, modalPresentationStyle: UIModalPresentationStyle = .fullScreen) -> Promise<[String:Any]>{
         let (tempPromise, seal) = Promise<[String:Any]>.pending()
         if let subVerifier = self.subVerifierDetails.first{

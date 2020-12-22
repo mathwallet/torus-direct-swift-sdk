@@ -466,7 +466,7 @@
 				CODE_SIGN_ENTITLEMENTS = TorusDirectSDKDemo/TorusDirectSDKDemo.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"TorusDirectSDKDemo/Preview Content\"";
-				DEVELOPMENT_TEAM = 2Q63NCPY55;
+				DEVELOPMENT_TEAM = TZ222P77XM;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = TorusDirectSDKDemo/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.3;
@@ -474,7 +474,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.torus.TorusDirectSDKDemo;
+				PRODUCT_BUNDLE_IDENTIFIER = com.torus.TorusDirectSDKDemo1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -496,7 +496,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.torus.TorusDirectSDKDemo;
+				PRODUCT_BUNDLE_IDENTIFIER = com.torus.TorusDirectSDKDemo1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
