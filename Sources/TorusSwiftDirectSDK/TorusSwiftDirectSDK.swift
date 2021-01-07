@@ -175,7 +175,33 @@ open class TorusSwiftDirectSDK{
         }
         return tempPromise
     }
-    
+    // SingleId
+    /// - Parameters:
+    ///   - verifierId:  google email、wechat unionId
+    ///   - verifierName:  "math-wechat","math-wechat-x"
+    ///   - idToken: JWT Token
+    /// - Returns: Key Data (privateKey)
+    public func handleSingleIdVerifier(verifierId: String, verifierName: String, idToken: String) -> Promise<[String:Any]>{
+        let (tempPromise, seal) = Promise<[String:Any]>.pending()
+        let data: [String:Any] = [:]
+
+        let extraParams = ["verifieridentifier": self.aggregateVerifierName, "verifier_id":verifierId, "sub_verifier_ids":[verifierName], "verify_params": [["verifier_id": verifierId, "idtoken": idToken]]] as [String : Any]
+        let buffer: Data = try! NSKeyedArchiver.archivedData(withRootObject: extraParams, requiringSecureCoding: false)
+        let hashedOnce = idToken.sha3(.keccak256)
+        
+        self.getEndpoints().then{ boolean in
+            return self.torusUtils.retrieveShares(endpoints: self.endpoints, verifierIdentifier: self.aggregateVerifierName, verifierId: verifierId, idToken: hashedOnce, extraParams: buffer).map{ ($0, data)}
+        }.done { responseFromRetrieveShares, newData in
+            var data = newData
+            data["privateKey"] = responseFromRetrieveShares["privateKey"]
+            data["publicAddress"] = responseFromRetrieveShares["publicAddress"]
+            seal.fulfill(data)
+        }.catch{err in
+            self.logger.error("handleSingleIdVerifier: err:", err)
+            seal.reject(err)
+        }
+        return tempPromise
+    }
     func handleAndAggregateVerifier(controller: UIViewController?) -> Promise<[String:Any]>{
         // TODO: implement verifier
         return Promise(error: TSDSError.methodUnavailable)
